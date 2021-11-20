@@ -2,12 +2,14 @@ package src;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.io.IOException;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+//import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 @SuppressWarnings("serial")
@@ -15,7 +17,7 @@ public class Panel_menu extends JPanel{
 	Panel_menu() {	
 		super(new GridLayout(7, 5));
 		addEmptyRow();
-		addTextCenter("KAMISADO");
+		addTextCenter("title.jpg");
 		addEmptyRow();
 		addButtonCenter("Play!");
 		addEmptyRow();
@@ -39,7 +41,7 @@ public class Panel_menu extends JPanel{
 	}
 
 	private void addTextCenter(String s) {
-		addEmptyHalfRow(); add(new JLabel(s, SwingConstants.CENTER)); addEmptyHalfRow();
+		addEmptyHalfRow(); add(new JLabel(new ImageIcon(s))); addEmptyHalfRow();
 	}
 	
 	private void addButtonCenter(String s) {
@@ -48,13 +50,19 @@ public class Panel_menu extends JPanel{
 
 
 	public static void main(String[] args) {
-		JFrame f = new JFrame("Kamisado");
+		/*JFrame f = new JFrame("Kamisado");
 		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		f.add(new Panel_menu());
 		f.setMinimumSize(new Dimension(880, 620));
 		f.pack();
-		f.setVisible(true);
-
+		f.setVisible(true);*/
+		Game g1 = new Game(64);
+		try {
+			g1.initGame("front_init.txt", "back_init.txt");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
