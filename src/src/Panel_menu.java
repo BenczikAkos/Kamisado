@@ -1,12 +1,15 @@
 package src;
+import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
+//import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.IOException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+//import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 //import javax.swing.SwingConstants;
@@ -58,11 +61,22 @@ public class Panel_menu extends JPanel{
 		f.setVisible(true);*/
 		Game g1 = new Game(64);
 		try {
-			g1.initGame("front_init.txt", "back_init.txt");
+			g1.initGame("front_init.txt", "back_init.txt", "color_init.txt", "tower_init.txt");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//*
+		JFrame f = new JFrame("Table");
+		f.setMinimumSize(new Dimension(780, 780));
+		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		JPanel p = new JPanel(new BorderLayout());
+		TablePainter painter = new TablePainter(g1);
+		p.add("Center", painter);
+		f.add("Center", p);
+		f.pack();
+		f.setVisible(true);
+		//*/
 	}
 
 }

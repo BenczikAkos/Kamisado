@@ -32,22 +32,31 @@ public class Field {
 	 */
 	public void setTower(Tower what) { currTower = what; }
 	public void setColor(Color c) { color = c; }
+	public Color getColor() { return this.color; }
+	public Tower getCurrTower() { return currTower; }
+	
 	private ArrayList<Field> getNeighbour(Direction d) {
-		if(currTower != null || frontNeighbours.get(d) == null) {
+		if(currTower != null) {
 			return null;
 		}
 		else {
 			ArrayList<Field> avaible = new ArrayList<Field>();
 			avaible.add(this);
-			avaible.addAll(frontNeighbours.get(d).getNeighbour(d));
+			if (frontNeighbours.get(d) != null) {
+				ArrayList<Field> neighbours = frontNeighbours.get(d).getNeighbour(d);
+				if(neighbours!=null)
+					avaible.addAll(frontNeighbours.get(d).getNeighbour(d));
+			}
 			return avaible;
 		}
 	}
 	public ArrayList<Field> getNeighbours(DirType upOrDown) {
 		ArrayList<Field> avaible = new ArrayList<Field>();
-		for(Direction d: Direction.values()) {
-			if(d.getType().equals(upOrDown)) {
-				avaible.addAll(getNeighbour(d));				
+		for(Direction d: frontNeighbours.keySet()) {
+			if(d.getType()!=null && d.getType().equals(upOrDown)) {
+				ArrayList<Field> d_neighbours = this.frontNeighbours.get(d).getNeighbour(d);
+				if(d_neighbours!=null)
+					avaible.addAll(d_neighbours);				
 			}
 		}
 		return avaible;
