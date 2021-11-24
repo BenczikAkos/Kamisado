@@ -24,7 +24,7 @@ public class Field {
 		sameColorTowers = new ArrayList<Tower>();
 		currGame = g;
 	}
-	/*
+	/**
 	 * Setter a Field currTower nevû változójához
 	 * 
 	 * @param what
@@ -32,6 +32,7 @@ public class Field {
 	 */
 	public void setTower(Tower what) { currTower = what; }
 	public void setColor(Color c) { color = c; }
+	public void setSameColorTower(Tower what) { sameColorTowers.add(what); }
 	public Color getColor() { return this.color; }
 	public Tower getCurrTower() { return currTower; }
 	
@@ -61,7 +62,7 @@ public class Field {
 		}
 		return avaible;
 	}
-	/*
+	/**
 	 * Egy mezõt inicializál a sima lépéshez használatos szomszédaival és a tolás esetén fontos szomszédaival.
 	 * A szomszédokat tároló adatszerkezeteket úgy tölti fel,
 	 * hogy csak olyan irányok legyenek benne amerre tényleg szomszédja.

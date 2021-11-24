@@ -59,9 +59,10 @@ public class Panel_menu extends JPanel{
 		f.setMinimumSize(new Dimension(880, 620));
 		f.pack();
 		f.setVisible(true);*/
-		Game g1 = new Game(64);
+		Game g1 = new Game(8,8);
+		String[] setups = {"front_init.txt", "back_init.txt", "color_init.txt", "tower_init.txt"};
 		try {
-			g1.initGame("front_init.txt", "back_init.txt", "color_init.txt", "tower_init.txt");
+			g1.initGame(setups);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

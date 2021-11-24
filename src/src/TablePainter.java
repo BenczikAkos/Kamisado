@@ -23,8 +23,8 @@ public class TablePainter extends Component {
         g2.setBackground(Color.white);
         int square = Math.min(size.height, size.width);
         int lilsquare = square/8;
-        for(int i = 0; i < 8; i++) {
-        	for(int ii = 0; ii < 8; ii++) {
+        for(int i = 0; i < game.tablesize.getHeight(); i++) {
+        	for(int ii = 0; ii < game.tablesize.getWidth(); ii++) {
         		int fieldNum = i*8+ii;
         		Field currField = game.table.get(fieldNum);
         		Color FieldColor = currField.getColor();
