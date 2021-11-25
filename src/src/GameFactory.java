@@ -59,7 +59,7 @@ public class GameFactory {
 	private void setFieldsSameColorTowers() {
 		for(Field f: g.table) {
 			for(Tower t: g.towers) {
-				if(f.getColor().equals(t.color))
+				if(f.getColor().equals(t.getColor()))
 					f.setSameColorTower(t);
 			}
 		}

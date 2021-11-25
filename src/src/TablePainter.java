@@ -5,52 +5,77 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Shape;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.awt.geom.Rectangle2D;
 
 @SuppressWarnings("serial")
 public class TablePainter extends Component {
-	private Game game;
+	public Game game;
+	public LinkedList<Rectangle2D> fields;
+	public LinkedList<Ellipse2D> towers;
+	public LinkedList<Ellipse2D> fieldHighlight;
+	public LinkedList<Ellipse2D> towerHighlight;
+
+	private ResizeCalculator resizeCalc;
+	
 	TablePainter(Game game) { 
 		this.game = game;
+		fields = new LinkedList<Rectangle2D>();
+		towers = new LinkedList<Ellipse2D>(); //A tornyokat tárolja úgy (nagy kör, kis kör) sorozatban, balról jobbra, fentrõl le
+		fieldHighlight = new LinkedList<Ellipse2D>();
+		towerHighlight = new LinkedList<Ellipse2D>();
+		resizeCalc = new SquareResizeCalculator(this, game.tablesize.height, game.towers.size());
 		addMouseListener(new MyMouseListener());
+		addComponentListener(new ResizeListener());
 	}
+
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
-		Dimension size = getSize();
-        g2.setBackground(Color.white);
-        int square = Math.min(size.height, size.width);
-        int lilsquare = square/8;
-        for(int i = 0; i < game.tablesize.getHeight(); i++) {
-        	for(int ii = 0; ii < game.tablesize.getWidth(); ii++) {
-        		int fieldNum = i*8+ii;
-        		Field currField = game.table.get(fieldNum);
-        		Color FieldColor = currField.getColor();
-        		int x = ii*lilsquare; int y = i*lilsquare;
-        		g2.setColor(FieldColor); 
-        		g2.fillRect(x, y, lilsquare, lilsquare);
-        		Tower currTower = currField.getCurrTower();
-        		if(currTower != null) {
-                	Color playerColor;
-        			if(currTower.getDirType().equals(DirType.UP)) {
-                		playerColor = Color.white;
-                	}
-                	else {
-                		playerColor = Color.black;
-                	}
-        			g2.setColor(playerColor);
-                	g2.fillOval(x, y, lilsquare, lilsquare);
-                	g2.setColor(currTower.getColor());
-                	double rad = lilsquare/2;
-                	g2.fill(new Ellipse2D.Double(x+rad/2, y+rad/2, rad, rad));
-        		}
-        	}
-        }
+		g2.setBackground(Color.white);
+		drawAllFields(g2);
+		drawAllTowers(g2);
+		
 	}
-	public void repaint() {
+	public void repaint() { 
 		paint(this.getGraphics());
+	}
+	
+	public void resizeShapes() {
+		resizeCalc.resize();
+	}
+	
+	private void drawAllFields(Graphics2D g) {
+		for(Shape s: fields) {
+			int indice = fields.indexOf(s);
+			Field currField = game.table.get(indice);
+			Color currColor = currField.getColor();
+			g.setColor(currColor);
+			g.fill(s);
+		}
+	}
+	
+	private void drawAllTowers(Graphics2D g) {
+		for(int i = 0; i < towers.size(); i +=2) {
+			Tower currTower = game.towers.get(i/2);
+			if(currTower.getDirType().equals(DirType.UP))
+				g.setColor(Color.white);
+			else
+				g.setColor(Color.black);
+				g.fill(towers.get(i));
+		}
+		for(int i = 1; i < towers.size(); i +=2) {
+			Tower currTower = game.towers.get(i/2);
+			Color currColor = currTower.getColor();
+			g.setColor(currColor);
+			g.fill(towers.get(i));
+		}
 	}
 	
 	public void highlightFields(ArrayList<Field> fields) {
@@ -69,9 +94,7 @@ public class TablePainter extends Component {
 		};
 	}
 
-	private class MyMouseListener implements MouseListener {
-
-		@Override
+	private class MyMouseListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
 			Tower testTower = game.towers.get(2);
 			testTower.moveto(game.table.get(42));
@@ -79,30 +102,17 @@ public class TablePainter extends Component {
 			repaint();
 			highlightFields(avaible);
 		}
-
-		@Override
-		public void mousePressed(MouseEvent e) {
-			// TODO Auto-generated method stub
-
+	}
+	
+	private class ResizeListener extends ComponentAdapter {
+		public void componentResized(ComponentEvent e) {
+			TablePainter p = (TablePainter)e.getComponent();
+			p.resizeShapes();
+			repaint();
+			Tower testTower = game.towers.get(2);
+			testTower.moveto(game.table.get(42));
+			ArrayList<Field> avaible = testTower.activate();
+			highlightFields(avaible);
 		}
-
-		@Override
-		public void mouseReleased(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseEntered(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void mouseExited(MouseEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-
 	}
 }

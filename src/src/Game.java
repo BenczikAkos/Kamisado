@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class Game {
 	ArrayList<Field> table;
 	ArrayList<Tower> towers;
+	TablePainter painter;
 	int round;
 	Dimension tablesize;
 	
@@ -16,6 +17,7 @@ public class Game {
 		round = 0;
 		tablesize = new Dimension(height, width);
 	}
+	public void setPainter(TablePainter p) { painter = p; }
 	/**
 	 * Inicializálja a játékot a megadott inicializációs fájlok szerint
 	 * @param setups Azon fájlok nevei amibõl kiolvassa az inicializáláshoz szükséges adatokat

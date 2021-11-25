@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 
 public class Tower {
-	Color color;
+	private Color color;
 	//Melyik mezõn áll éppen a torony
 	private Field currField;
 	//Azt mutatja melyik játékosé a bábu (merre mozog)

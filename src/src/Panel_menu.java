@@ -64,7 +64,6 @@ public class Panel_menu extends JPanel{
 		try {
 			g1.initGame(setups);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		//*
@@ -73,11 +72,11 @@ public class Panel_menu extends JPanel{
 		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JPanel p = new JPanel(new BorderLayout());
 		TablePainter painter = new TablePainter(g1);
+		g1.setPainter(painter);
 		p.add("Center", painter);
 		f.add("Center", p);
 		f.pack();
 		f.setVisible(true);
-		//*/
 	}
 
 }
