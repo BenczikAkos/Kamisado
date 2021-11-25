@@ -2,7 +2,6 @@ package src;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Shape;
@@ -20,7 +19,7 @@ public class TablePainter extends Component {
 	public Game game;
 	public LinkedList<Rectangle2D> fields;
 	public LinkedList<Ellipse2D> towers;
-	public LinkedList<Ellipse2D> fieldHighlight;
+	public ArrayList<Integer> fieldHighlight;
 	public LinkedList<Ellipse2D> towerHighlight;
 
 	private ResizeCalculator resizeCalc;
@@ -29,7 +28,7 @@ public class TablePainter extends Component {
 		this.game = game;
 		fields = new LinkedList<Rectangle2D>();
 		towers = new LinkedList<Ellipse2D>(); //A tornyokat tárolja úgy (nagy kör, kis kör) sorozatban, balról jobbra, fentrõl le
-		fieldHighlight = new LinkedList<Ellipse2D>();
+		fieldHighlight = new ArrayList<Integer>();
 		towerHighlight = new LinkedList<Ellipse2D>();
 		resizeCalc = new SquareResizeCalculator(this, game.tablesize.height, game.towers.size());
 		addMouseListener(new MyMouseListener());
@@ -41,7 +40,6 @@ public class TablePainter extends Component {
 		g2.setBackground(Color.white);
 		drawAllFields(g2);
 		drawAllTowers(g2);
-		
 	}
 	public void repaint() { 
 		paint(this.getGraphics());
@@ -58,6 +56,9 @@ public class TablePainter extends Component {
 			Color currColor = currField.getColor();
 			g.setColor(currColor);
 			g.fill(s);
+			if(fieldHighlight.contains(indice)) {
+				highlightField(s, g);
+			}
 		}
 	}
 	
@@ -78,29 +79,46 @@ public class TablePainter extends Component {
 		}
 	}
 	
-	public void highlightFields(ArrayList<Field> fields) {
-		for(Field f: fields) {
-			int fieldId = game.table.indexOf(f);
-			int row = fieldId/8;
-			int column = fieldId%8;
-			Graphics2D g2 = (Graphics2D)this.getGraphics();
-			Dimension size = getSize();
-	        int square = Math.min(size.height, size.width);
-	        int lilsquare = square/8;
-	        double rad = lilsquare/5;
-	        double x = (column+0.5)*lilsquare-rad/2; double y = (row+0.5)*lilsquare-rad/2;
-    		g2.setColor(Color.black); 
-    		g2.fill(new Ellipse2D.Double(x, y, rad, rad));
-		};
+	private void highlightField(Shape s, Graphics2D g) {
+		Rectangle2D field = s.getBounds2D();
+		double centerx = field.getCenterX(); double centery = field.getCenterY();
+		Ellipse2D token = new Ellipse2D.Double();
+		token.setFrameFromCenter(centerx, centery, centerx-field.getWidth()/8, centery-field.getHeight()/8);
+		g.setColor(Color.black);
+		g.fill(token);
 	}
 
+	public void towerMoved(int which, int where) {
+		double newx = fields.get(where).getX(); double newy = fields.get(where).getY();
+		Ellipse2D bigtow = towers.get(which*2);
+		double oldx = bigtow.getX(); double oldy = bigtow.getY();
+		double offsetx = oldx-newx; double offsety = oldy-newy; //Amennyivel  arrébbkerült a nagy kör, annyival fog arrébbkerülni a kicsi is
+		double bigsizex = bigtow.getWidth(); double bigsizey = bigtow.getHeight();
+		Ellipse2D smalltow = towers.get(which*2+1);
+		double smallsizex = smalltow.getWidth(); double smallsizey = smalltow.getHeight();
+		double smallnewx = smalltow.getX()-offsetx; double smallnewy = smalltow.getY()-offsety;
+		towers.set(which*2, new Ellipse2D.Double(newx, newy, bigsizex, bigsizey));
+		towers.set(which*2+1, new Ellipse2D.Double(smallnewx, smallnewy, smallsizex, smallsizey));
+	}
+	
 	private class MyMouseListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
-			Tower testTower = game.towers.get(2);
-			testTower.moveto(game.table.get(42));
-			ArrayList<Field> avaible = testTower.activate();
-			repaint();
-			highlightFields(avaible);
+			Tower actTower = game.getActiveTower();
+			if(actTower == null)
+				actTower = game.towers.get(15);
+			int whichField = -1;
+			for(Shape s: fields) {
+				if(s.contains(e.getPoint())) {
+					whichField++; break;
+				}
+				else
+					whichField++;
+			}
+			if(actTower.moveto(game.table.get(whichField))) {
+				int whichTower = game.towers.indexOf(actTower);
+				towerMoved(whichTower, whichField);
+				repaint();				
+			}
 		}
 	}
 	
@@ -109,10 +127,10 @@ public class TablePainter extends Component {
 			TablePainter p = (TablePainter)e.getComponent();
 			p.resizeShapes();
 			repaint();
-			Tower testTower = game.towers.get(2);
-			testTower.moveto(game.table.get(42));
-			ArrayList<Field> avaible = testTower.activate();
-			highlightFields(avaible);
+//			Tower testTower = game.towers.get(2);
+//			testTower.moveto(game.table.get(42));
+//			ArrayList<Field> avaible = testTower.activate();
+			//highlightFields(avaible);
 		}
 	}
 }

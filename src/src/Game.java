@@ -7,15 +7,24 @@ import java.util.ArrayList;
 public class Game {
 	ArrayList<Field> table;
 	ArrayList<Tower> towers;
+	Tower activeTower = null;
+	DirType whoseTurn = DirType.UP;
 	TablePainter painter;
-	int round;
 	Dimension tablesize;
 	
 	public Game(int height, int width){
 		table = new ArrayList<Field>();
 		towers = new ArrayList<Tower>();
-		round = 0;
 		tablesize = new Dimension(height, width);
+	}
+	public DirType getWhoseTurn() { return whoseTurn; }
+	public void setActiveTower(Tower t) { activeTower = t; }
+	public Tower getActiveTower() { return activeTower; }
+	public void turnPassed() {
+		if(whoseTurn.equals(DirType.UP))
+			whoseTurn = DirType.DOWN;
+		else
+			whoseTurn = DirType.UP;
 	}
 	public void setPainter(TablePainter p) { painter = p; }
 	/**
@@ -29,5 +38,15 @@ public class Game {
 		gf.setupGame(setups);
 	}
 	
+	public void newAvaibles(ArrayList<Field> fields) {
+		if(fields.isEmpty()) {
+			System.out.println("Szorulas");
+		}
+		ArrayList<Integer> fieldNums = new ArrayList<Integer>();
+		for(Field f: fields) {
+			fieldNums.add(table.indexOf(f));
+		}
+		painter.fieldHighlight = fieldNums;
+	}
 
 }

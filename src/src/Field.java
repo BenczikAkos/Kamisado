@@ -17,7 +17,7 @@ public class Field {
 	//A mezõ színével azonos színû tornyokat tárolja (alapesetben 2-t)
 	private ArrayList<Tower> sameColorTowers;
 	//Melyik játékban szerepel az adott emzõ objektum
-	private Game currGame;
+	protected Game currGame;
 	Field(Game g){
 		frontNeighbours = new HashMap<Direction, Field>();
 		backNeighbours = new HashMap<DirType, Field>();
@@ -94,13 +94,12 @@ public class Field {
 		}
 	}
 	public void entered(Tower t) {
-		if(t.equals(null))
-			throw new NullPointerException("Null_Tower lepett mezore");
-		else {
-			currTower = t;
-			for(Tower samecolor: sameColorTowers) {
+		currGame.turnPassed();
+		currTower = t;
+		for(Tower samecolor: sameColorTowers) {
+			if(samecolor.activeRound())
 				samecolor.activate();
-			}
 		}
+
 	}
 }

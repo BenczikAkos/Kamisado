@@ -48,7 +48,7 @@ public class GameFactory {
 			int startFieldNo = Integer.parseInt(split[1]);
 			Field startField = g.table.get(startFieldNo);
 			DirType player = split[2].equals("UP") ? DirType.UP : DirType.DOWN;
-			Tower newTower = new Tower(c, startField, player);
+			Tower newTower = new Tower(c, startField, player, g);
 			g.towers.add(newTower);
 			startField.setTower(newTower);
 		}
