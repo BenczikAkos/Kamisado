@@ -18,6 +18,7 @@ public class GameFactory {
 		setFieldsNeighboursAndColors(setupFiles);
 		initAllTowers(setupFiles[3]);
 		setFieldsSameColorTowers();
+		setWinningFields();
 	}
 	
 	private void setFieldsNeighboursAndColors(String[] setupFileNames) throws IOException {
@@ -64,6 +65,18 @@ public class GameFactory {
 			}
 		}
 	}
+	
+	private void setWinningFields() {
+		for(int i = 0; i < 8; ++i) {
+			Field currField = g.table.get(i);
+			currField.setWinningSide(DirType.UP);
+		}
+		for(int i = 56; i < 64; ++i) {
+			Field currField = g.table.get(i);
+			currField.setWinningSide(DirType.DOWN);
+		}
+	}
+	
 	/**
 	 * Megnyit egy adott nevû fájlt és visszaadja a sorait egy ArrayList-ben
 	 * @param setupFileName a fájl neve

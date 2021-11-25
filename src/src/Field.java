@@ -16,8 +16,10 @@ public class Field {
 	private HashMap<DirType, Field> backNeighbours;
 	//A mezõ színével azonos színû tornyokat tárolja (alapesetben 2-t)
 	private ArrayList<Tower> sameColorTowers;
+	//Melyik játékos bábuja nyer ha rálép
+	private DirType winningSide = null;
 	//Melyik játékban szerepel az adott emzõ objektum
-	protected Game currGame;
+	private Game currGame;
 	Field(Game g){
 		frontNeighbours = new HashMap<Direction, Field>();
 		backNeighbours = new HashMap<DirType, Field>();
@@ -35,8 +37,8 @@ public class Field {
 	public void setSameColorTower(Tower what) { sameColorTowers.add(what); }
 	public Color getColor() { return this.color; }
 	public Tower getCurrTower() { return currTower; }
-	
-	private ArrayList<Field> getNeighbour(Direction d) {
+	public void setWinningSide(DirType who) { winningSide = who; }
+	protected ArrayList<Field> getNeighbour(Direction d) {
 		if(currTower != null) {
 			return null;
 		}
@@ -94,6 +96,9 @@ public class Field {
 		}
 	}
 	public void entered(Tower t) {
+		if(winningSide != null && winningSide.equals(t.getDirType())) {
+			System.out.println("Nyeres van");
+		}
 		currGame.turnPassed();
 		currTower = t;
 		for(Tower samecolor: sameColorTowers) {
