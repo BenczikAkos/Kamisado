@@ -4,10 +4,16 @@ import java.awt.Canvas;
 import java.awt.Dimension;
 //import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 //import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -53,12 +59,7 @@ public class Panel_menu extends JPanel{
 
 
 	public static void main(String[] args) {
-		/*JFrame f = new JFrame("Kamisado");
-		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		f.add(new Panel_menu());
-		f.setMinimumSize(new Dimension(880, 620));
-		f.pack();
-		f.setVisible(true);*/
+
 		Game g1 = new Game(8,8);
 		String[] setups = {"front_init.txt", "back_init.txt", "color_init.txt", "tower_init.txt"};
 		try {
@@ -68,12 +69,31 @@ public class Panel_menu extends JPanel{
 		}
 		//*
 		JFrame f = new JFrame("Table");
-		f.setMinimumSize(new Dimension(780, 780));
+		f.setMinimumSize(new Dimension(725, 780));
 		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		JPanel p = new JPanel(new BorderLayout());
 		TablePainter painter = new TablePainter(g1);
+		JFileChooser saveMenu = new JFileChooser("Save");
+		JButton saveButton = new JButton("Save");
+		saveButton.setMaximumSize(new Dimension(100, 20));
+		saveButton.addActionListener(e -> {
+			int userSelection = saveMenu.showSaveDialog(f);		 
+			if (userSelection == JFileChooser.APPROVE_OPTION) {
+				File fileToSave = saveMenu.getSelectedFile();
+				try {
+					FileOutputStream fOutStr = new FileOutputStream(fileToSave);
+					ObjectOutputStream OutStr;
+					OutStr = new ObjectOutputStream(fOutStr);
+					OutStr.writeObject(g1);
+					OutStr.close();
+				}
+				catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}});
 		g1.setPainter(painter);
 		p.add("Center", painter);
+		p.add("North", saveButton);
 		f.add("Center", p);
 		f.pack();
 		f.setVisible(true);

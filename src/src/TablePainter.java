@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.awt.geom.Rectangle2D;
 
+
 @SuppressWarnings("serial")
 public class TablePainter extends Component {
 	public Game game;
@@ -33,7 +34,7 @@ public class TablePainter extends Component {
 		resizeCalc = new SquareResizeCalculator(this, game.tablesize.height, game.towers.size());
 		addMouseListener(new MyMouseListener());
 		addComponentListener(new ResizeListener());
-	}
+}
 
 	public void paint(Graphics g) {
 		Graphics2D g2 = (Graphics2D) g;
@@ -48,7 +49,10 @@ public class TablePainter extends Component {
 	public void resizeShapes() {
 		resizeCalc.resize();
 	}
-	
+	/**
+	 * Kirajzolja az összes mezõt megfelelõ színnel, valamint a kiemelendõ mezõkre apró fekete köröket rajzol
+	 * @param g
+	 */
 	private void drawAllFields(Graphics2D g) {
 		for(Shape s: fields) {
 			int indice = fields.indexOf(s);
@@ -61,7 +65,10 @@ public class TablePainter extends Component {
 			}
 		}
 	}
-	
+	/**
+	 * Kirajzolja az összes tornyot ami két körbõl áll; egy nagyobb ami fekete vagy fehér és a közepén egy kisebb, színes kör
+	 * @param g
+	 */
 	private void drawAllTowers(Graphics2D g) {
 		for(int i = 0; i < towers.size(); i +=2) {
 			Tower currTower = game.towers.get(i/2);
@@ -78,7 +85,12 @@ public class TablePainter extends Component {
 			g.fill(towers.get(i));
 		}
 	}
-	
+	/**
+	 * A megadott alakzat közepére egy kis fekete kört rajzol, ezzel mutatja hogy rá lehet az adott mezõre lépni
+	 * @param s
+	 * 			Az alakzat (mezõt jelentõ négyzet), aminek a közepére fekete kört rajzol
+	 * @param g
+	 */
 	private void highlightField(Shape s, Graphics2D g) {
 		Rectangle2D field = s.getBounds2D();
 		double centerx = field.getCenterX(); double centery = field.getCenterY();
@@ -87,7 +99,13 @@ public class TablePainter extends Component {
 		g.setColor(Color.black);
 		g.fill(token);
 	}
-
+	/**
+	 * Frissíti a tornyokat tároló alakzatokat egy torony lépésével
+	 * @param which
+	 * 		Melyik (hányadik) torony lépett (a játék logikája szerint, nem a tárolásé szerint)
+	 * @param where
+	 * 		Hányas számú mezõre lépett
+	 */
 	public void towerMoved(int which, int where) {
 		double newx = fields.get(where).getX(); double newy = fields.get(where).getY();
 		Ellipse2D bigtow = towers.get(which*2);
@@ -104,8 +122,21 @@ public class TablePainter extends Component {
 	private class MyMouseListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
 			Tower actTower = game.getActiveTower();
-			if(actTower == null)
-				actTower = game.towers.get(15);
+			if(actTower == null) {
+				int whichTower = 7;
+				for(int i = 16; i < 32; i += 2) {
+					if(towers.get(i).contains(e.getPoint())) {
+						whichTower++; break;
+					}
+					else
+						whichTower++;
+				}
+				Tower chosenTower = game.towers.get(whichTower);
+				game.newAvaibles(chosenTower.activate());
+				repaint();
+				game.setActiveTower(chosenTower);
+				return;
+			}
 			int whichField = -1;
 			for(Shape s: fields) {
 				if(s.contains(e.getPoint())) {

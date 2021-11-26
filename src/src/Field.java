@@ -1,11 +1,13 @@
 package src;
 
 import java.awt.Color;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class Field {
+@SuppressWarnings("serial")
+public class Field implements Serializable{
 	//A mezõ színe
 	private Color color;
 	//A jelenleg mezõn tartózkodó torony
@@ -38,6 +40,14 @@ public class Field {
 	public Color getColor() { return this.color; }
 	public Tower getCurrTower() { return currTower; }
 	public void setWinningSide(DirType who) { winningSide = who; }
+	
+	/**
+	 * Rekurzívan elkéri egy adott irányba a szomszédjait, megáll ha bábu van a mezõn vagy pálya széle
+	 * @param d
+	 * 			Melyik irányba kéri el a szomszédjait
+	 * @return
+	 * 			Egy ArrayList amiben az adott irányba található összes szomszédja van
+	 */
 	protected ArrayList<Field> getNeighbour(Direction d) {
 		if(currTower != null) {
 			return null;
@@ -53,6 +63,13 @@ public class Field {
 			return avaible;
 		}
 	}
+	/**
+	 * Az összes, a megadott játékos által elérhetõ mezõt adja vissza
+	 * @param upOrDown
+	 * 			Melyik játékosnak kellenek a szomszédjai
+	 * @return
+	 * 			Egy ArrayList, benne az összes elérhetõ mezõvel
+	 */
 	public ArrayList<Field> getNeighbours(DirType upOrDown) {
 		ArrayList<Field> avaible = new ArrayList<Field>();
 		for(Direction d: frontNeighbours.keySet()) {
@@ -95,9 +112,18 @@ public class Field {
 			backNeighbours.removeFirst();
 		}
 	}
+	
+	/**
+	 * Egy torony rálépett a mezõre, megnézi hogy ezzel valaki nyert-e, ha nem, lépteti a játékot, beállítja
+	 * a rajta álló bábut a paraméterben kapottra és aktiválja a vele egyezõ színû soron következõ bábut
+	 * @param t
+	 * 			A torony, ami rálépett a mezõre
+	 */
 	public void entered(Tower t) {
 		if(winningSide != null && winningSide.equals(t.getDirType())) {
 			System.out.println("Nyeres van");
+			currGame.win(winningSide);
+			return;
 		}
 		currGame.turnPassed();
 		currTower = t;

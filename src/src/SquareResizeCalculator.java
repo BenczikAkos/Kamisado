@@ -3,9 +3,11 @@ package src;
 import java.awt.Dimension;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class SquareResizeCalculator extends ResizeCalculator{
+@SuppressWarnings("serial")
+public class SquareResizeCalculator extends ResizeCalculator implements Serializable{
 	private int rows, towers;
 	public SquareResizeCalculator(TablePainter painter, int size, int towers) { 
 		super(painter); 

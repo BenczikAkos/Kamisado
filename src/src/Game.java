@@ -2,15 +2,19 @@ package src;
 
 import java.awt.Dimension;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Game {
+
+public class Game implements Serializable{
+	private static final long serialVersionUID = 1L;
 	ArrayList<Field> table;
 	ArrayList<Tower> towers;
 	Tower activeTower = null;
 	DirType whoseTurn = DirType.UP;
 	TablePainter painter;
 	Dimension tablesize;
+	boolean stuck = false;
 	
 	public Game(int height, int width){
 		table = new ArrayList<Field>();
@@ -40,13 +44,22 @@ public class Game {
 	
 	public void newAvaibles(ArrayList<Field> fields) {
 		if(fields.isEmpty()) {
-			System.out.println("Szorulas");
+			if(stuck == true) {
+				win(whoseTurn);
+			}
+			stuck = true;
+			activeTower.getCurrField().entered(activeTower); //"Helyben lép egyet a beszorult bábu"
 		}
-		ArrayList<Integer> fieldNums = new ArrayList<Integer>();
-		for(Field f: fields) {
-			fieldNums.add(table.indexOf(f));
+		else {			
+			ArrayList<Integer> fieldNums = new ArrayList<Integer>();
+			for(Field f: fields) {
+				fieldNums.add(table.indexOf(f));
+			}
+			painter.fieldHighlight = fieldNums;
 		}
-		painter.fieldHighlight = fieldNums;
 	}
 
+	public void win(DirType who) {
+		painter.fieldHighlight = new  ArrayList<Integer>();
+	}
 }
