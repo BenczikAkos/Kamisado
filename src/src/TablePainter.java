@@ -28,7 +28,7 @@ public class TablePainter extends Component {
 	TablePainter(Game game) { 
 		this.game = game;
 		fields = new LinkedList<Rectangle2D>();
-		towers = new LinkedList<Ellipse2D>(); //A tornyokat tárolja úgy (nagy kör, kis kör) sorozatban, balról jobbra, fentrõl le
+		towers = new LinkedList<Ellipse2D>(); //A tornyokat tárolja (nagy kör, kis kör) sorozatban, balról jobbra, fentrõl le
 		fieldHighlight = new ArrayList<Integer>();
 		towerHighlight = new LinkedList<Ellipse2D>();
 		resizeCalc = new SquareResizeCalculator(this, game.tablesize.height, game.towers.size());
@@ -56,7 +56,7 @@ public class TablePainter extends Component {
 	private void drawAllFields(Graphics2D g) {
 		for(Shape s: fields) {
 			int indice = fields.indexOf(s);
-			Field currField = game.table.get(indice);
+			Field currField = game.getField(indice);
 			Color currColor = currField.getColor();
 			g.setColor(currColor);
 			g.fill(s);
@@ -71,7 +71,7 @@ public class TablePainter extends Component {
 	 */
 	private void drawAllTowers(Graphics2D g) {
 		for(int i = 0; i < towers.size(); i +=2) {
-			Tower currTower = game.towers.get(i/2);
+			Tower currTower = game.getTower(i/2);
 			if(currTower.getDirType().equals(DirType.UP))
 				g.setColor(Color.white);
 			else
@@ -79,7 +79,7 @@ public class TablePainter extends Component {
 				g.fill(towers.get(i));
 		}
 		for(int i = 1; i < towers.size(); i +=2) {
-			Tower currTower = game.towers.get(i/2);
+			Tower currTower = game.getTower(i/2);
 			Color currColor = currTower.getColor();
 			g.setColor(currColor);
 			g.fill(towers.get(i));
@@ -131,7 +131,7 @@ public class TablePainter extends Component {
 					else
 						whichTower++;
 				}
-				Tower chosenTower = game.towers.get(whichTower);
+				Tower chosenTower = game.getTower(whichTower);
 				game.newAvaibles(chosenTower.activate());
 				repaint();
 				game.setActiveTower(chosenTower);
@@ -145,8 +145,8 @@ public class TablePainter extends Component {
 				else
 					whichField++;
 			}
-			if(actTower.moveto(game.table.get(whichField))) {
-				int whichTower = game.towers.indexOf(actTower);
+			if(actTower.moveto(game.getField(whichField))) {
+				int whichTower = game.towerIndex(actTower);
 				towerMoved(whichTower, whichField);
 				repaint();				
 			}
@@ -158,10 +158,6 @@ public class TablePainter extends Component {
 			TablePainter p = (TablePainter)e.getComponent();
 			p.resizeShapes();
 			repaint();
-//			Tower testTower = game.towers.get(2);
-//			testTower.moveto(game.table.get(42));
-//			ArrayList<Field> avaible = testTower.activate();
-			//highlightFields(avaible);
 		}
 	}
 }

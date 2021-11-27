@@ -2,10 +2,7 @@ package src;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Dimension;
-//import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,10 +12,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-//import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-//import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 
 @SuppressWarnings("serial")

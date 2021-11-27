@@ -55,4 +55,11 @@ public class Tower implements Serializable{
 			return false;
 		}
 	}
+	
+	public void moveRandom() {
+		ArrayList<Field> avaible = currField.getNeighbours(side);
+		int maxValue = avaible.size();
+		int random = (int)(Math.random()*maxValue);
+		this.moveto(avaible.get(random));
+	}
 }

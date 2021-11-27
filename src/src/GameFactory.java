@@ -11,9 +11,10 @@ import java.util.LinkedList;
 public class GameFactory {
 	Game g;
 	GameFactory(Game g) { this.g = g; }
+	
 	public void setupGame(String[] setupFiles) throws IOException {
 		for(int i = 0; i < g.tablesize.getWidth()*g.tablesize.getHeight(); ++i) {
-			g.table.add(new Field(g));
+			g.addField(new Field(g));
 		}
 		setFieldsNeighboursAndColors(setupFiles);
 		initAllTowers(setupFiles[3]);
@@ -31,8 +32,8 @@ public class GameFactory {
 			String i_color = colorSetupAllLines.get(i);
 			LinkedList<Field> frontNeighbours = LineToFieldLinkedList(i_front_setup);
 			LinkedList<Field> backNeighbours = LineToFieldLinkedList(i_back_setup);
-			g.table.get(i).setNeighbours(frontNeighbours, backNeighbours);
-			g.table.get(i).setColor(Color.decode(i_color));
+			g.getField(i).setNeighbours(frontNeighbours, backNeighbours);
+			g.getField(i).setColor(Color.decode(i_color));
 		}
 	}
 	/**
@@ -47,10 +48,10 @@ public class GameFactory {
 			String[] split = setupAllLines.get(i).split(":");
 			Color c = Color.decode(split[0]);
 			int startFieldNo = Integer.parseInt(split[1]);
-			Field startField = g.table.get(startFieldNo);
+			Field startField = g.getField(startFieldNo);
 			DirType player = split[2].equals("UP") ? DirType.UP : DirType.DOWN;
 			Tower newTower = new Tower(c, startField, player, g);
-			g.towers.add(newTower);
+			g.addTower(newTower);
 			startField.setTower(newTower);
 		}
 	}
@@ -68,11 +69,11 @@ public class GameFactory {
 	
 	private void setWinningFields() {
 		for(int i = 0; i < 8; ++i) {
-			Field currField = g.table.get(i);
+			Field currField = g.getField(i);
 			currField.setWinningSide(DirType.UP);
 		}
 		for(int i = 56; i < 64; ++i) {
-			Field currField = g.table.get(i);
+			Field currField = g.getField(i);
 			currField.setWinningSide(DirType.DOWN);
 		}
 	}
@@ -109,7 +110,7 @@ public class GameFactory {
 				LL.add(null);
 			else {
 				int whichOther = Integer.parseInt(arr[i]);
-				LL.add(g.table.get(whichOther));
+				LL.add(g.getField(whichOther));
 			}
 		}
 		return LL;

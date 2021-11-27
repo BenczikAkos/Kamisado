@@ -47,7 +47,9 @@ public class SquareResizeCalculator extends ResizeCalculator implements Serializ
 		double square = Math.min(d.height, d.width);
         double lilsquare = square/rows;
         for(int i = 0; i < towers; ++i) {
-			int idx = p.game.table.indexOf((p.game.towers.get(i)).getCurrField());
+        	Tower currTower = p.game.getTower(i);
+        	Field currField = currTower.getCurrField();
+			int idx = p.game.fieldIndex(currField);
         	double bigx = (idx%rows)*lilsquare; double bigy = idx/rows*lilsquare;
         	double rad = lilsquare / 2;
     		double smallx = bigx+lilsquare/2-rad/2; double smally = bigy+lilsquare/2-rad/2;
