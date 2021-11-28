@@ -1,6 +1,7 @@
 package src;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.File;
@@ -8,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -57,16 +59,74 @@ public class Panel_menu extends JPanel{
 
 		Game g1 = new Game(8,8);
 		String[] setups = {"front_init.txt", "back_init.txt", "color_init.txt", "tower_init.txt"};
-		try {
-			g1.initGame(setups);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		//*
-		JFrame f = new JFrame("Table");
+
+		JFrame f = new JFrame("Kamisado");
 		f.setMinimumSize(new Dimension(725, 780));
 		f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		JPanel p = new JPanel(new BorderLayout());
+		
+		JPanel main = new JPanel(new CardLayout());
+
+		JPanel menu = new JPanel();
+		menu.setLayout(new BoxLayout(menu, BoxLayout.Y_AXIS));
+		JButton play = new JButton("Play!");
+		play.setAlignmentX(CENTER_ALIGNMENT);
+		JButton load = new JButton("Load");
+		load.setAlignmentX(CENTER_ALIGNMENT);
+		play.addActionListener(e -> ((CardLayout)main.getLayout()).next(main));
+		
+		menu.add(play);
+		menu.add(load);
+
+		JPanel options = new JPanel();
+		options.setLayout(new BoxLayout(options, BoxLayout.Y_AXIS));
+		JButton aiVSai = new JButton("AI vs. AI");
+		aiVSai.setAlignmentX(CENTER_ALIGNMENT);
+		JButton aiVSp = new JButton("AI vs. Player");
+		aiVSp.setAlignmentX(CENTER_ALIGNMENT);
+		JButton pVSai = new JButton("Player vs. AI");
+		pVSai.setAlignmentX(CENTER_ALIGNMENT);
+		JButton pVSp = new JButton("Player vs. Player");
+		pVSp.setAlignmentX(CENTER_ALIGNMENT);
+		aiVSai.addActionListener(e -> {
+			try {
+				g1.initGame(setups, true, true);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			((CardLayout)main.getLayout()).next(main);
+		});
+		aiVSp.addActionListener(e -> {
+			try {
+				g1.initGame(setups, true, false);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			((CardLayout)main.getLayout()).next(main);
+		});
+		pVSai.addActionListener(e -> {
+			try {
+				g1.initGame(setups, false, true);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			((CardLayout)main.getLayout()).next(main);
+		});
+		pVSp.addActionListener(e -> {
+			try {
+				g1.initGame(setups, false, false);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			((CardLayout)main.getLayout()).next(main);
+		});
+		options.add(aiVSai);
+		options.add(aiVSp);
+		options.add(pVSai);
+		options.add(pVSp);
+
+
+
+		JPanel gaming = new JPanel(new BorderLayout());
 		TablePainter painter = new TablePainter(g1);
 		JFileChooser saveMenu = new JFileChooser("Save");
 		JButton saveButton = new JButton("Save");
@@ -87,9 +147,12 @@ public class Panel_menu extends JPanel{
 				}
 			}});
 		g1.setPainter(painter);
-		p.add("Center", painter);
-		p.add("North", saveButton);
-		f.add("Center", p);
+		gaming.add("Center", painter);
+		gaming.add("North", saveButton);
+		main.add(menu, "menu");
+		main.add(options);
+		main.add(gaming, "gametable");
+		f.add(main, "Center");
 		f.pack();
 		f.setVisible(true);
 	}

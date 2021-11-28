@@ -31,8 +31,8 @@ public class TablePainter extends Component {
 		towers = new LinkedList<Ellipse2D>(); //A tornyokat tárolja (nagy kör, kis kör) sorozatban, balról jobbra, fentrõl le
 		fieldHighlight = new ArrayList<Integer>();
 		towerHighlight = new LinkedList<Ellipse2D>();
-		resizeCalc = new SquareResizeCalculator(this, game.tablesize.height, game.towers.size());
-		addMouseListener(new MyMouseListener());
+		resizeCalc = new SquareResizeCalculator(this, game.tablesize.height, 16);
+		addMouseListener(new UserClickedListener());
 		addComponentListener(new ResizeListener());
 }
 
@@ -108,10 +108,10 @@ public class TablePainter extends Component {
 	 */
 	public void towerMoved(int which, int where) {
 		double newx = fields.get(where).getX(); double newy = fields.get(where).getY();
-		Ellipse2D bigtow = towers.get(which*2);
-		double oldx = bigtow.getX(); double oldy = bigtow.getY();
+		Ellipse2D bigtower = towers.get(which*2);
+		double oldx = bigtower.getX(); double oldy = bigtower.getY();
 		double offsetx = oldx-newx; double offsety = oldy-newy; //Amennyivel  arrébbkerült a nagy kör, annyival fog arrébbkerülni a kicsi is
-		double bigsizex = bigtow.getWidth(); double bigsizey = bigtow.getHeight();
+		double bigsizex = bigtower.getWidth(); double bigsizey = bigtower.getHeight();
 		Ellipse2D smalltow = towers.get(which*2+1);
 		double smallsizex = smalltow.getWidth(); double smallsizey = smalltow.getHeight();
 		double smallnewx = smalltow.getX()-offsetx; double smallnewy = smalltow.getY()-offsety;
@@ -119,8 +119,19 @@ public class TablePainter extends Component {
 		towers.set(which*2+1, new Ellipse2D.Double(smallnewx, smallnewy, smallsizex, smallsizey));
 	}
 	
-	private class MyMouseListener extends MouseAdapter {
+	private class UserClickedListener extends MouseAdapter {
 		public void mouseClicked(MouseEvent e) {
+			DirType whoseTurn = game.getWhoseTurn();
+			AI currAI = game.ai.get(whoseTurn);
+			if(currAI == null) {
+				userPlays(e);
+			}
+			else {
+				AIPlays(currAI);
+			}
+		}
+		
+		private void userPlays(MouseEvent e) {
 			Tower actTower = game.getActiveTower();
 			if(actTower == null) {
 				int whichTower = 7;
@@ -151,13 +162,20 @@ public class TablePainter extends Component {
 				repaint();				
 			}
 		}
+		
+		private void AIPlays(AI currAI) {
+			int[] coords = new int[2];
+			coords = currAI.makeMove();
+			towerMoved(coords[1], coords[0]);
+			repaint();
+		}
 	}
 	
 	private class ResizeListener extends ComponentAdapter {
 		public void componentResized(ComponentEvent e) {
 			TablePainter p = (TablePainter)e.getComponent();
 			p.resizeShapes();
-			repaint();
+//			repaint();
 		}
 	}
 }

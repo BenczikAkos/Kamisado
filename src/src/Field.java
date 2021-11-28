@@ -121,7 +121,6 @@ public class Field implements Serializable{
 	 */
 	public void entered(Tower t) {
 		if(winningSide != null && winningSide.equals(t.getDirType())) {
-			System.out.println("Nyeres van");
 			currGame.win(winningSide);
 			return;
 		}

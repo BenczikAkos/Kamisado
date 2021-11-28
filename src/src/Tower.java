@@ -56,10 +56,17 @@ public class Tower implements Serializable{
 		}
 	}
 	
-	public void moveRandom() {
+	public int[] moveRandom() {
 		ArrayList<Field> avaible = currField.getNeighbours(side);
+		g.painter.repaint();
+		g.newAvaibles(avaible);
 		int maxValue = avaible.size();
 		int random = (int)(Math.random()*maxValue);
-		this.moveto(avaible.get(random));
+		Field dest = avaible.get(random);
+		this.moveto(dest);
+		int[] coords = new int[2];
+		coords[0] = g.fieldIndex(dest);
+		coords[1] = g.towerIndex(this);
+		return coords;
 	}
 }

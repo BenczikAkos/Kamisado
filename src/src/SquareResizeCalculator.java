@@ -42,6 +42,7 @@ public class SquareResizeCalculator extends ResizeCalculator implements Serializ
 	}
 	
 	private void resizeAllTowers() {
+		towers = p.game.towers.size();
 		LinkedList<Ellipse2D> gameTowers = p.towers;
 		Dimension d = p.getSize();
 		double square = Math.min(d.height, d.width);
@@ -55,15 +56,8 @@ public class SquareResizeCalculator extends ResizeCalculator implements Serializ
     		double smallx = bigx+lilsquare/2-rad/2; double smally = bigy+lilsquare/2-rad/2;
 			Ellipse2D.Double bigtower = new Ellipse2D.Double(bigx, bigy, lilsquare, lilsquare);
 			Ellipse2D.Double smalltower = new Ellipse2D.Double(smallx, smally, rad, rad);
-			if(towers*2-1 < gameTowers.size()) {
-				gameTowers.set(2*i, bigtower);
-				gameTowers.set(2*i+1, smalltower);
-			}
-			else {
-				gameTowers.add(bigtower);
-				gameTowers.add(smalltower);
-			}
+			gameTowers.set(2*i, bigtower);
+			gameTowers.set(2*i+1, smalltower);
         }
 	}
-
 }

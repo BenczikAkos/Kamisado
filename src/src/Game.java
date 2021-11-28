@@ -14,13 +14,14 @@ public class Game implements Serializable{
 	private Tower activeTower = null;
 	private DirType whoseTurn = DirType.UP;
 	TablePainter painter;
-	private HashMap<DirType, AI> ai;
+	HashMap<DirType, AI> ai;
 	Dimension tablesize;
 	boolean stuck = false;
 	
 	public Game(int height, int width){
 		table = new ArrayList<Field>();
 		towers = new ArrayList<Tower>();
+		ai = new HashMap<DirType, AI>();
 		tablesize = new Dimension(height, width);
 	}
 	public DirType getWhoseTurn() { return whoseTurn; }
@@ -40,11 +41,7 @@ public class Game implements Serializable{
 		}
 		else {
 			whoseTurn = DirType.UP;			
-		}
-		if(ai != null && ai.containsKey(whoseTurn)) {
-			ai.get(whoseTurn).makeMove();
-		}
-		
+		}		
 	}
 	public void setPainter(TablePainter p) { painter = p; }
 	/**
@@ -53,9 +50,9 @@ public class Game implements Serializable{
 	 * (mezõknek kik a szomszédai, milyen színûek, milyen tornyok vannak és hol kezdik a játékot...)
 	 * @throws IOException ha az egyik fájlt nem tudta megnyitni
 	 */
-	public void initGame(String[] setups) throws IOException {
+	public void initGame(String[] setups, boolean up_ai, boolean down_ai) throws IOException {
 		GameFactory gf = new GameFactory(this);
-		gf.setupGame(setups);
+		gf.setupGame(setups, up_ai, down_ai);
 	}
 	
 	public void newAvaibles(ArrayList<Field> fields) {

@@ -1,6 +1,8 @@
 package src;
 
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.geom.Ellipse2D;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -12,14 +14,16 @@ public class GameFactory {
 	Game g;
 	GameFactory(Game g) { this.g = g; }
 	
-	public void setupGame(String[] setupFiles) throws IOException {
+	public void setupGame(String[] setupFiles, boolean upAI, boolean downAI) throws IOException {
 		for(int i = 0; i < g.tablesize.getWidth()*g.tablesize.getHeight(); ++i) {
 			g.addField(new Field(g));
 		}
 		setFieldsNeighboursAndColors(setupFiles);
 		initAllTowers(setupFiles[3]);
 		setFieldsSameColorTowers();
-		setWinningFields();
+		setAIs(upAI, downAI);
+		setWinningFields(upAI, downAI);
+		setTablePainterTowers();
 	}
 	
 	private void setFieldsNeighboursAndColors(String[] setupFileNames) throws IOException {
@@ -67,15 +71,52 @@ public class GameFactory {
 		}
 	}
 	
-	private void setWinningFields() {
+	private void setAIs(boolean up, boolean down) {
+		if(up) {
+			g.ai.put(DirType.UP, new AI(g));
+		}
+		if(down) {
+			g.ai.put(DirType.DOWN, new AI(g));
+		}
+	}
+	
+	private void setWinningFields(boolean up, boolean down) {
 		for(int i = 0; i < 8; ++i) {
 			Field currField = g.getField(i);
 			currField.setWinningSide(DirType.UP);
+			if(up) {
+				AI upAI = g.ai.get(DirType.UP);
+				upAI.winningFields.add(currField);
+			}
 		}
 		for(int i = 56; i < 64; ++i) {
 			Field currField = g.getField(i);
 			currField.setWinningSide(DirType.DOWN);
+			if(down) {
+				AI downAI = g.ai.get(DirType.DOWN);
+				downAI.winningFields.add(currField);
+			}
 		}
+	}
+	
+	private void setTablePainterTowers() {
+		TablePainter p = g.painter;
+		LinkedList<Ellipse2D> gameTowers = p.towers;
+		Dimension d = p.getSize();
+		double square = Math.min(d.height, d.width);
+        double lilsquare = square/8;
+        for(int i = 0; i < 16; ++i) {
+        	Tower currTower = p.game.getTower(i);
+        	Field currField = currTower.getCurrField();
+			int idx = p.game.fieldIndex(currField);
+        	double bigx = (idx%8)*lilsquare; double bigy = idx/8*lilsquare;
+        	double rad = lilsquare / 2;
+    		double smallx = bigx+lilsquare/2-rad/2; double smally = bigy+lilsquare/2-rad/2;
+			Ellipse2D.Double bigtower = new Ellipse2D.Double(bigx, bigy, lilsquare, lilsquare);
+			Ellipse2D.Double smalltower = new Ellipse2D.Double(smallx, smally, rad, rad);
+			gameTowers.add(bigtower);
+			gameTowers.add(smalltower);
+        }
 	}
 	
 	/**
