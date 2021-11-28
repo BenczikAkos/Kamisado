@@ -58,7 +58,6 @@ public class Game implements Serializable{
 	public void newAvaibles(ArrayList<Field> fields) {
 		if(fields.isEmpty()) {
 			if(stuck == true) {
-				System.out.println("double stuck");
 				win(whoseTurn);
 				return;
 			}
@@ -76,5 +75,6 @@ public class Game implements Serializable{
 
 	public void win(DirType who) {
 		painter.fieldHighlight = new  ArrayList<Integer>();
+		painter.win(who);
 	}
 }

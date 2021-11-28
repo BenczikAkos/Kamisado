@@ -12,6 +12,10 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.LinkedList;
+
+import javax.swing.JLabel;
+
+import java.awt.Container;
 import java.awt.geom.Rectangle2D;
 
 
@@ -117,6 +121,15 @@ public class TablePainter extends Component {
 		double smallnewx = smalltow.getX()-offsetx; double smallnewy = smalltow.getY()-offsety;
 		towers.set(which*2, new Ellipse2D.Double(newx, newy, bigsizex, bigsizey));
 		towers.set(which*2+1, new Ellipse2D.Double(smallnewx, smallnewy, smallsizex, smallsizey));
+	}
+	
+	public void win(DirType who) {
+		Container parent = this.getParent();
+		String winnerText = who.equals(DirType.UP) ? "White wins" : "Black wins";
+		JLabel title = new JLabel(winnerText);
+		parent.add("South", title);
+		parent.validate();
+		this.removeMouseListener(this.getMouseListeners()[0]);	
 	}
 	
 	private class UserClickedListener extends MouseAdapter {
