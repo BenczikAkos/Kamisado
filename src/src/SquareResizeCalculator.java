@@ -5,9 +5,14 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.LinkedList;
-
-@SuppressWarnings("serial")
+/**
+ * Az megjelenítendõ alakzatok átméretezése a feladata. Megadott számú négyzet alakú mezõt - akik valami n*n-es elrendezésben vannak - 
+ * valamint megadott számú (nagykör, kiskör) formátumban tárolt tornyok (bábuk) új méretét számolja ki az ablak méretéhez
+ * @author Ákos
+ *
+ */
 public class SquareResizeCalculator extends ResizeCalculator implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private int rows, towers;
 	public SquareResizeCalculator(TablePainter painter, int size, int towers) { 
 		super(painter); 
@@ -15,11 +20,24 @@ public class SquareResizeCalculator extends ResizeCalculator implements Serializ
 		this.towers = towers;
 	}
 	
+	public SquareResizeCalculator(TablePainter p) {
+		super(p);
+		rows = 8;
+		towers = 16;
+	}
+	/**
+	 * Újraméretezi az összes alakzatot, azaz az összes mezõt és összes tornyot.
+	 */
 	public void resize() {
 		resizeAllFields();
 		resizeAllTowers();
 	}
 	
+	/**
+	 * Újraméretezi az összes mezõt. Felteszi, hogy a mezõk n*n-es elrendezésben vannak, négyzet alakúak
+	 * és a lehetõ leginkább ki kell tölteni az ablakot. Ha még a TablePainterben nincsenek mezõket reprezentáló alakzatok,
+	 * feltölti azokat (inicializál is kezdetben)
+	 */
 	private void resizeAllFields() {
 		LinkedList<Rectangle2D> gameFields = p.fields;
 		Dimension d = p.getSize();
@@ -41,6 +59,9 @@ public class SquareResizeCalculator extends ResizeCalculator implements Serializ
         }   
 	}
 	
+	/**
+	 * Újraméretezi az összes tornyot (towers darabot). Felteszi hogy a a tornyok (nagykör, kiskör) elrendezésben vannak tárolva
+	 */
 	private void resizeAllTowers() {
 		towers = p.game.towers.size();
 		LinkedList<Ellipse2D> gameTowers = p.towers;

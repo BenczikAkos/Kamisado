@@ -49,7 +49,9 @@ public class TablePainter extends Component {
 	public void repaint() { 
 		paint(this.getGraphics());
 	}
-	
+	/**
+	 * Újraméretezi az összes alakzatot
+	 */
 	public void resizeShapes() {
 		resizeCalc.resize();
 	}
@@ -123,6 +125,11 @@ public class TablePainter extends Component {
 		towers.set(which*2+1, new Ellipse2D.Double(smallnewx, smallnewy, smallsizex, smallsizey));
 	}
 	
+	/**
+	 * Bejelenti a játék gyõztesét, az ehhez tartozó vizuális effekteket valósítja meg
+	 * @param who
+	 * 		A játékos aki nyert
+	 */
 	public void win(DirType who) {
 		Container parent = this.getParent();
 		String winnerText = who.equals(DirType.UP) ? "White wins" : "Black wins";
@@ -133,6 +140,11 @@ public class TablePainter extends Component {
 	}
 	
 	private class UserClickedListener extends MouseAdapter {
+		/**
+		 * Egérkattintásra végrehajtandó eseményeket valósít meg.
+		 * Ha felhasználó köre jön és érvényes mezõre kattint, odalépteti a tornyot.
+		 * Ha a gépi ellenfél köre van, a gép lép egyet.
+		 */
 		public void mouseClicked(MouseEvent e) {
 			DirType whoseTurn = game.getWhoseTurn();
 			AI currAI = game.ai.get(whoseTurn);
@@ -144,6 +156,12 @@ public class TablePainter extends Component {
 			}
 		}
 		
+		/**
+		 * Lejátszat egy kört a felhasználóval, ha nincs aktív bábu (a játék elsõ köre), kiválaszthatja.
+		 * A végén frissíti a tornyok ábráit tároló adatszerkezetet
+		 * @param e
+		 * 		A felhasználó kattintása
+		 */
 		private void userPlays(MouseEvent e) {
 			Tower actTower = game.getActiveTower();
 			if(actTower == null) {
@@ -176,6 +194,11 @@ public class TablePainter extends Component {
 			}
 		}
 		
+		/**
+		 * Lejátszat egy kört az AI-al, frissíti a tornyok ábráit tároló adatszerkezetet
+		 * @param currAI
+		 * 		A soron következõ AI
+		 */
 		private void AIPlays(AI currAI) {
 			int[] coords = new int[2];
 			coords = currAI.makeMove();
@@ -185,10 +208,12 @@ public class TablePainter extends Component {
 	}
 	
 	private class ResizeListener extends ComponentAdapter {
+		/**
+		 * Ha újraméretezik az ablakot, újraszámolja az összes alakzat méretét, helyzetét
+		 */
 		public void componentResized(ComponentEvent e) {
 			TablePainter p = (TablePainter)e.getComponent();
 			p.resizeShapes();
-//			repaint();
 		}
 	}
 }

@@ -26,6 +26,13 @@ public class GameFactory {
 		setTablePainterTowers();
 	}
 	
+	/**
+	 * A megadott fájlokból inicializálja a mezõk szomszédjait és a mezõk színeit.
+	 * @param setupFileNames
+	 * 			A fájlok amik tartalmazzák az inicializáláshoz szükséges adatokat
+	 * @throws IOException
+	 * 			Ha a megadott fájlok nem léteznek/nem elérhetõek
+	 */
 	private void setFieldsNeighboursAndColors(String[] setupFileNames) throws IOException {
 		ArrayList<String> frontSetupAllLines = FileToStringArrayList(setupFileNames[0]);
 		ArrayList<String> backSetupAllLines = FileToStringArrayList(setupFileNames[1]);
@@ -71,6 +78,13 @@ public class GameFactory {
 		}
 	}
 	
+	/**
+	 * Létrehozza és beállítja a játékban résztvevõ gépi ellenfeleket igény szerint 0-t, 1-t vagy 2-t
+	 * @param up
+	 * 		Kell-e a fehérrel játszó gépi ellenfél? true/false
+	 * @param down
+	 * 		Kell-e a feketével játszó gépi ellenfél? true/false
+	 */
 	private void setAIs(boolean up, boolean down) {
 		if(up) {
 			g.ai.put(DirType.UP, new AI(g));
@@ -80,6 +94,14 @@ public class GameFactory {
 		}
 	}
 	
+	/**
+	 * Beállítja a megfelelõ mezõket, hogy melyik játékosoknak õk a célmezõi. Ezzel párhuzamosan beállítja a megfelelõ színnel 
+	 * játszó gépi ellenfélnek is, hogy ezek azok a mezõk, amelyekre lépve nyer	
+	 * @param up
+	 * 		Van-e fehérrel játszó gépi ellenfél? true/false
+	 * @param down
+	 * 		Van-e feketével játszó gépi ellenfél? true/false
+	 */
 	private void setWinningFields(boolean up, boolean down) {
 		for(int i = 0; i < 8; ++i) {
 			Field currField = g.getField(i);
@@ -99,6 +121,10 @@ public class GameFactory {
 		}
 	}
 	
+	/**
+	 * Feltölti a TablePainter tornyait tartalmazó adatszerkezetét a megfelelõ kezdõalakzatokkal
+	 * (nagykör, kiskör) párokban tárolja a tornyokat
+	 */
 	private void setTablePainterTowers() {
 		TablePainter p = g.painter;
 		LinkedList<Ellipse2D> gameTowers = p.towers;
@@ -133,9 +159,10 @@ public class GameFactory {
 	}
 	/**
 	 * Egy stringet szétszed a :-ok mentén és eme pici stringek által indexelt mezõket tartalmazó LinkedListtel tér vissza
-	 * A 
 	 * @param line
+	 * 		String, ami :-kal elválasztott számokat tartalmaz
 	 * @return
+	 * 		A Field setNeighbours() metódusának megfelelõ LinkedList-tel tér vissza
 	 */
 	private LinkedList<Field> LineToFieldLinkedList(String line) {
 		LinkedList<Field> neighbours = new LinkedList<Field>();
@@ -144,6 +171,13 @@ public class GameFactory {
 		return neighbours;
 	}
 	
+	/**
+	 * Egy StrinArrayban tárolt számokat alakít a mezõk szomszédjait beállító LinkedList-té
+	 * @param arr
+	 * 		String tömb, amiben "számok" találhatóak
+	 * @return
+	 * 		 Field setNeighbours() metódusának megfelelõ LinkedList-tel tér vissza
+	 */
 	private LinkedList<Field> StringArrToFieldLL(String[] arr){
 		LinkedList<Field> LL = new LinkedList<Field>();
 		for(int i = 0; i < arr.length; ++i) {

@@ -1,14 +1,29 @@
 package src;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class AI {
+/**
+ * Mesterséges intelligenciát, gépi ellenfelet megvalósító osztály. Véletlenszerûen lép, de nyertes lépést nem hagy ki.
+ * @author Ákos
+ *
+ */
+public class AI implements Serializable{
+	private static final long serialVersionUID = 1L;
 	Game game;
+	//Azok a mezõk, amikre ha bábut léptet, nyer
 	ArrayList<Field> winningFields;
 	AI(Game game) { 
 		this.game = game;
 		winningFields = new ArrayList<Field>();
 	}
+	
+	/**
+	 * Lép egyet szabályosan. Ha nincs bábu kiválasztva (játék elsõ lépése), egy elõre meghatározottal lép.
+	 * Ha tud úgy lépni, hogy megnyerje a játékot, megteszi. Egyébként véletlen, szabályos mezõre lép.
+	 * @return Két int-tel tér vissza: [0]: melyik mezõre lépett; [1]: melyik toronnyal lépett
+	 * (A mezõk, tornyok a játék logikája szerint vannak számozva)
+	 */
 	public int[] makeMove() {
 		Tower actTower = game.getActiveTower();
 		if(actTower == null) {

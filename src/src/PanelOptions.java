@@ -7,6 +7,12 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+/**
+ * A játékmódot kiválasztó menüt megvalósító panel. 4 mód választható, attól függõen hány gépi ellenfélt szeretnénk,
+ * és hogy az elsõ vagy második legyen a körsorrendben.
+ * @author Ákos
+ *
+ */
 public class PanelOptions extends JPanel {
 	private static final long serialVersionUID = 1L;
 
