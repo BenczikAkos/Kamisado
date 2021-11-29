@@ -19,7 +19,7 @@ public class GameFactory {
 			g.addField(new Field(g));
 		}
 		setFieldsNeighboursAndColors(setupFiles);
-		initAllTowers(setupFiles[3]);
+		initAllTowers(setupFiles[2]);
 		setFieldsSameColorTowers();
 		setAIs(upAI, downAI);
 		setWinningFields(upAI, downAI);
@@ -36,15 +36,12 @@ public class GameFactory {
 	 */
 	private void setFieldsNeighboursAndColors(String[] setupFileNames) throws IOException {
 		ArrayList<String> frontSetupAllLines = FileToStringArrayList(setupFileNames[0]);
-		ArrayList<String> backSetupAllLines = FileToStringArrayList(setupFileNames[1]);
-		ArrayList<String> colorSetupAllLines = FileToStringArrayList(setupFileNames[2]);
+		ArrayList<String> colorSetupAllLines = FileToStringArrayList(setupFileNames[1]);
 		for(int i = 0; i < g.tablesize.getWidth()*g.tablesize.getHeight(); ++i) {
 			String i_front_setup = frontSetupAllLines.get(i);
-			String i_back_setup = backSetupAllLines.get(i);
 			String i_color = colorSetupAllLines.get(i);
 			LinkedList<Field> frontNeighbours = LineToFieldLinkedList(i_front_setup);
-			LinkedList<Field> backNeighbours = LineToFieldLinkedList(i_back_setup);
-			g.getField(i).setNeighbours(frontNeighbours, backNeighbours);
+			g.getField(i).setNeighbours(frontNeighbours);
 			g.getField(i).setColor(Color.decode(i_color));
 		}
 	}

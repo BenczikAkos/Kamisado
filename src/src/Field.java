@@ -14,8 +14,6 @@ public class Field implements Serializable{
 	private Tower currTower;
 	//Sima lépés esetére tárolja a szomszédokat, irány-mezõ módon
 	private HashMap<Direction, Field> frontNeighbours;
-	//Tolás esetére tárolja a szomszédokat, kvázi tolójátékos-mezõ módon (alapesetben az elõre- és a hátraszomszéd)
-	private HashMap<DirType, Field> backNeighbours;
 	//A mezõ színével azonos színû tornyokat tárolja (alapesetben 2-t)
 	private ArrayList<Tower> sameColorTowers;
 	//Melyik játékos bábuja nyer ha rálép
@@ -24,7 +22,6 @@ public class Field implements Serializable{
 	private Game currGame;
 	Field(Game g){
 		frontNeighbours = new HashMap<Direction, Field>();
-		backNeighbours = new HashMap<DirType, Field>();
 		sameColorTowers = new ArrayList<Tower>();
 		currGame = g;
 	}
@@ -35,10 +32,10 @@ public class Field implements Serializable{
 	 *		Tower típusú változó, amire be kell állítani az attribútum értékét
 	 */
 	public void setTower(Tower what) { currTower = what; }
-	public void setColor(Color c) { color = c; }
-	public void setSameColorTower(Tower what) { sameColorTowers.add(what); }
-	public Color getColor() { return this.color; }
 	public Tower getCurrTower() { return currTower; }
+	public void setSameColorTower(Tower what) { sameColorTowers.add(what); }
+	public void setColor(Color c) { color = c; }
+	public Color getColor() { return this.color; }
 	public void setWinningSide(DirType who) { winningSide = who; }
 	
 	/**
@@ -95,7 +92,7 @@ public class Field implements Serializable{
 	 * @param backNeighbours
 	 * 			Toláshoz használatos szomszédokat tárol a DirType szerinti sorrendben (most UP, DOWN)
 	 */
-	public void setNeighbours(LinkedList<Field> frontNeighbours, LinkedList<Field> backNeighbours) {
+	public void setNeighbours(LinkedList<Field> frontNeighbours) {
 		
 		for(Direction d: Direction.values()) {
 			if(frontNeighbours.peekFirst() != null) {
@@ -103,13 +100,6 @@ public class Field implements Serializable{
 				this.frontNeighbours.put(d, neighbour);
 			}
 			frontNeighbours.removeFirst();
-		}
-		
-		for(DirType dt: DirType.values()) {
-			if(backNeighbours.peekFirst() != null) {
-				this.backNeighbours.put(dt,  backNeighbours.getFirst());
-			}
-			backNeighbours.removeFirst();
 		}
 	}
 	
