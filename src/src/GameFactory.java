@@ -23,7 +23,8 @@ public class GameFactory {
 		setFieldsSameColorTowers();
 		setAIs(upAI, downAI);
 		setWinningFields(upAI, downAI);
-		setTablePainterTowers();
+		g.painter.setResizeCalc();
+		g.painter.resizeShapes();
 	}
 	
 	/**
@@ -127,7 +128,7 @@ public class GameFactory {
 	 */
 	private void setTablePainterTowers() {
 		TablePainter p = g.painter;
-		LinkedList<Ellipse2D> gameTowers = p.towers;
+		LinkedList<Ellipse2D.Double> gameTowers = p.towers;
 		Dimension d = p.getSize();
 		double square = Math.min(d.height, d.width);
         double lilsquare = square/8;

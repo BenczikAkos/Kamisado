@@ -1,6 +1,7 @@
 package src;
 
 import java.awt.CardLayout;
+import java.awt.Container;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,6 +35,10 @@ public class PanelMenu extends JPanel {
 					FileInputStream fInStr = new FileInputStream(fileFromLoad);
 					ObjectInputStream in = new ObjectInputStream(fInStr);
 					Game g = (Game)in.readObject();
+					JPanel loadGame = new PanelGame(g);
+					Container parent = this.getParent();
+					parent.add(loadGame, "load");
+					((CardLayout)parent.getLayout()).show(parent, "load");
 					in.close();
 				}
 				catch (IOException e1) {

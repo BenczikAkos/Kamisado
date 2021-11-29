@@ -17,25 +17,23 @@ import javax.swing.JLabel;
 
 import java.awt.Container;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 
 
 @SuppressWarnings("serial")
-public class TablePainter extends Component {
+public class TablePainter extends Component{
 	public Game game;
-	public LinkedList<Rectangle2D> fields;
-	public LinkedList<Ellipse2D> towers;
+	public LinkedList<Rectangle2D.Double> fields;
+	public LinkedList<Ellipse2D.Double> towers;
 	public ArrayList<Integer> fieldHighlight;
-	public LinkedList<Ellipse2D> towerHighlight;
 
 	private ResizeCalculator resizeCalc;
 	
 	TablePainter(Game game) { 
 		this.game = game;
-		fields = new LinkedList<Rectangle2D>();
-		towers = new LinkedList<Ellipse2D>(); //A tornyokat tárolja (nagy kör, kis kör) sorozatban, balról jobbra, fentrõl le
+		fields = new LinkedList<Rectangle2D.Double>();
+		towers = new LinkedList<Ellipse2D.Double>(); //A tornyokat tárolja (nagy kör, kis kör) sorozatban, balról jobbra, fentrõl le
 		fieldHighlight = new ArrayList<Integer>();
-		towerHighlight = new LinkedList<Ellipse2D>();
-		resizeCalc = new SquareResizeCalculator(this, game.tablesize.height, 16);
 		addMouseListener(new UserClickedListener());
 		addComponentListener(new ResizeListener());
 }
@@ -53,8 +51,14 @@ public class TablePainter extends Component {
 	 * Újraméretezi az összes alakzatot
 	 */
 	public void resizeShapes() {
-		resizeCalc.resize();
+		if(resizeCalc != null)
+			resizeCalc.resize();
 	}
+	
+	public void setResizeCalc() {
+		resizeCalc = new SquareResizeCalculator(this, game.tablesize.height, 16);
+	}
+	
 	/**
 	 * Kirajzolja az összes mezõt megfelelõ színnel, valamint a kiemelendõ mezõkre apró fekete köröket rajzol
 	 * @param g
@@ -113,7 +117,8 @@ public class TablePainter extends Component {
 	 * 		Hányas számú mezõre lépett
 	 */
 	public void towerMoved(int which, int where) {
-		double newx = fields.get(where).getX(); double newy = fields.get(where).getY();
+		Rectangle2D.Double actField = fields.get(where);
+		double newx = actField.getX(); double newy = actField.getY();
 		Ellipse2D bigtower = towers.get(which*2);
 		double oldx = bigtower.getX(); double oldy = bigtower.getY();
 		double offsetx = oldx-newx; double offsety = oldy-newy; //Amennyivel  arrébbkerült a nagy kör, annyival fog arrébbkerülni a kicsi is
@@ -139,7 +144,7 @@ public class TablePainter extends Component {
 		this.removeMouseListener(this.getMouseListeners()[0]);	
 	}
 	
-	private class UserClickedListener extends MouseAdapter {
+	private class UserClickedListener extends MouseAdapter implements Serializable{
 		/**
 		 * Egérkattintásra végrehajtandó eseményeket valósít meg.
 		 * Ha felhasználó köre jön és érvényes mezõre kattint, odalépteti a tornyot.
@@ -212,6 +217,11 @@ public class TablePainter extends Component {
 		 * Ha újraméretezik az ablakot, újraszámolja az összes alakzat méretét, helyzetét
 		 */
 		public void componentResized(ComponentEvent e) {
+			TablePainter p = (TablePainter)e.getComponent();
+			p.resizeShapes();
+		}
+		
+		public void componentShown(ComponentEvent e) {
 			TablePainter p = (TablePainter)e.getComponent();
 			p.resizeShapes();
 		}

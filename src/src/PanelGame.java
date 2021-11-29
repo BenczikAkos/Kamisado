@@ -37,7 +37,10 @@ public class PanelGame extends JPanel {
 					e1.printStackTrace();
 				}
 			}});
-		g1.setPainter(painter);
+		if(g1.painter == null)
+			g1.setPainter(painter);
+		else
+			painter = g1.painter;
 		this.add("Center", painter);
 		this.add("North", saveButton);
 	}
