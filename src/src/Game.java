@@ -6,18 +6,51 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-
+/**
+ * A játék átfogó logikáját megvalósító osztály
+ * @author Ákos
+ *
+ */
 public class Game implements Serializable{
 	private static final long serialVersionUID = 1L;
-	ArrayList<Field> table;
-	ArrayList<Tower> towers;
+	/**
+	 * A játéktábla egésze, az összes mezõ, jobbról balra, fentrõl lefelé tárolva
+	 */
+	private ArrayList<Field> table;
+	/**
+	 * A játékban szereplõ összes torony(bábu). Kezdõhelyzetük szerint jobbról balra, fentrõl le tárolva
+	 */
+	private ArrayList<Tower> towers;
+	/**
+	 * Az aktuálisan lépésre jogosult torony, kezdetben null, bármelyik fehér torny léphet
+	 */
 	private Tower activeTower = null;
+	/**
+	 * Azt mutatja, hogy aktuálisan melyik játékos köre van. Kezdetben a fehér játékosé (DirType.UP)
+	 */
 	private DirType whoseTurn = DirType.UP;
 	TablePainter painter;
+	/**
+	 * A gépi ellenfeleket tároló adatszerkezet, melyik játékoshoz melyik AI tartozik.
+	 * Ha az egyik játékos a felhasználó, ahhoz a DirType-hoz nem kerül érték
+	 */
 	HashMap<DirType, AI> ai;
+	/**
+	 * A játéktér méretét tárolja
+	 */
 	Dimension tablesize;
+	/**
+	 * Azt mutatja hogy az elõzõ körben beszorult-e a lépésre jogosult torony
+	 */
 	boolean stuck = false;
 	
+	/**
+	 * Egy megadott méretû játékot hoz létre
+	 * @param height
+	 * 		Hány sorból áll a játéktér
+	 * @param width
+	 * 		Hány oszlopból áll a játéktér
+	 */
 	public Game(int height, int width){
 		table = new ArrayList<Field>();
 		towers = new ArrayList<Tower>();
@@ -64,6 +97,18 @@ public class Game implements Serializable{
 	 */
 	public int towerIndex(Tower t) { return towers.indexOf(t); }
 	/**
+	 * Visszaadja hány mezõt tárol a játék
+	 * @return
+	 * 		A játék által tárolt mezõk száma
+	 */
+	public int getFieldsCount() { return table.size(); }
+	/**
+	 * Visszaadja hány tornyot tárol a játék
+	 * @return
+	 * 		A játék által tárolt tornyok száma
+	 */
+	public int getTowersCount() { return towers.size(); }
+	/**
 	 * Hozzáad egy új Field-et a játék mezõket tároló adatszerkezetének végéhez
 	 * @param f
 	 * 		A Field, amit hozzá akarunk adni
@@ -98,6 +143,11 @@ public class Game implements Serializable{
 			whoseTurn = DirType.UP;			
 		}		
 	}
+	/**
+	 * Beállítja a játék logikájához tartozó megjelenítõt a paraméterben kapottra
+	 * @param p
+	 * 		TablePainter objektum, aki a játék megjelenítésért felelõs
+	 */
 	public void setPainter(TablePainter p) { painter = p; }
 	/**
 	 * Inicializálja a játékot a megadott inicializációs fájlok szerint

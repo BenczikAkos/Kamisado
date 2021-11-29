@@ -1,6 +1,12 @@
 package src;
 
-public enum Direction {
+/**
+ * A tábla irányait összefoglaló enum, mindegyik irányhoz tartozik egy "játékosazonosító",
+ * hogy melyik játékos mozgathatja arra a szomszédra a bábuját 
+ * @author Ákos
+ *
+ */
+public enum Direction { 
 	upleft(DirType.UP),
 	upmiddle(DirType.UP),
 	upright(DirType.UP),

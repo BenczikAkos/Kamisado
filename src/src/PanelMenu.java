@@ -13,7 +13,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 
 /**
- * Kezdõ felületet megvalósító panel. Van rajta egy játék gomb, illetve egy elmentett játék betöltését lehetõvé tevõ gomb.
+ * Kezdõ oldalt megvalósító panel. Van rajta egy játék gomb, illetve egy elmentett játék betöltését lehetõvé tevõ gomb.
  * @author Ákos
  *
  */

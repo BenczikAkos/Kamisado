@@ -21,6 +21,9 @@ import java.io.Serializable;
 
 
 @SuppressWarnings("serial")
+/**
+ * A játéktábla grafikus megjelenítéséért felelõs osztály
+ */
 public class TablePainter extends Component{
 	public Game game;
 	public LinkedList<Rectangle2D.Double> fields;
@@ -29,7 +32,7 @@ public class TablePainter extends Component{
 
 	private ResizeCalculator resizeCalc;
 	
-	TablePainter(Game game) { 
+	public TablePainter(Game game) { 
 		this.game = game;
 		fields = new LinkedList<Rectangle2D.Double>();
 		towers = new LinkedList<Ellipse2D.Double>(); //A tornyokat tárolja (nagy kör, kis kör) sorozatban, balról jobbra, fentrõl le
@@ -143,7 +146,7 @@ public class TablePainter extends Component{
 		parent.validate();
 		this.removeMouseListener(this.getMouseListeners()[0]);	
 	}
-	
+	 
 	private class UserClickedListener extends MouseAdapter implements Serializable{
 		/**
 		 * Egérkattintásra végrehajtandó eseményeket valósít meg.
@@ -217,11 +220,6 @@ public class TablePainter extends Component{
 		 * Ha újraméretezik az ablakot, újraszámolja az összes alakzat méretét, helyzetét
 		 */
 		public void componentResized(ComponentEvent e) {
-			TablePainter p = (TablePainter)e.getComponent();
-			p.resizeShapes();
-		}
-		
-		public void componentShown(ComponentEvent e) {
 			TablePainter p = (TablePainter)e.getComponent();
 			p.resizeShapes();
 		}

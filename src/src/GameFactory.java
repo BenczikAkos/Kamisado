@@ -10,10 +10,33 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+/**
+ * A játék inicializálását megvalósító osztály
+ * @author Ákos
+ *
+ */
 public class GameFactory {
 	Game g;
+	/**
+	 * Paraméterben megkapja melyik játékot kell inicializálnia
+	 * @param g
+	 * 		A játék objektum, amit inicializálnia kell
+	 */
 	GameFactory(Game g) { this.g = g; }
 	
+	/**
+	 * Beállítja a megadott fájlok tartalma alapján a mezõket (darabszámuk, szomszédjaik, színeik,
+	 * vwlük egyszínû tornyok), a tornyokat (darabszámuk, színük, kezdõmezõjük, játékos akihez tartoznak)
+	 * és a gépi ellenfeleket ha szükséges
+	 * @param setupFiles
+	 * 		Azon fájlok (.txt) nevei egymás után ,amik alapján inicializálnia kell a játékot
+	 * @param upAI
+	 * 		Kell-e a fehér játékosként játszó AI-t beállítani? true/false
+	 * @param downAI
+	 * 		Kell-e a fekete játékosként játszó AI-t beállítani? true/false
+	 * @throws IOException
+	 * 		Ha érvénytelen fájlokkal próbáljuk inicializálni
+	 */
 	public void setupGame(String[] setupFiles, boolean upAI, boolean downAI) throws IOException {
 		for(int i = 0; i < g.tablesize.getWidth()*g.tablesize.getHeight(); ++i) {
 			g.addField(new Field(g));
@@ -68,10 +91,12 @@ public class GameFactory {
 	 * Minden mezõnek beállítja kik azok a tornyok, akiknek ugyanolyan a színe, mint a mezõnek
 	 */
 	private void setFieldsSameColorTowers() {
-		for(Field f: g.table) {
-			for(Tower t: g.towers) {
-				if(f.getColor().equals(t.getColor()))
-					f.setSameColorTower(t);
+		for(int f = 0; f < g.getFieldsCount(); ++f) {
+			Field field = g.getField(f);
+			for(int t = 0; t < g.getTowersCount(); ++t) {
+				Tower tower = g.getTower(t);
+				if(field.getColor().equals(tower.getColor()))
+					field.setSameColorTower(tower);
 			}
 		}
 	}
@@ -146,7 +171,7 @@ public class GameFactory {
 	/**
 	 * Megnyit egy adott nevû fájlt és visszaadja a sorait egy ArrayList-ben
 	 * @param setupFileName a fájl neve
-	 * @return Egy ArrayList<String> amiben soronként szerepel a fájl tartalma
+	 * @return Egy Stringeket tároló ArrayList amiben soronként szerepel a fájl tartalma
 	 * @throws IOException ha nem tudja megnyitni a kért fájlt
 	 */
 	private ArrayList<String> FileToStringArrayList(String setupFileName) throws IOException{

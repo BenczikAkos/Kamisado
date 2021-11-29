@@ -6,21 +6,38 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+/**
+ * A játéktábla mezõit megvalósító osztály
+ * @author Ákos
+ *
+ */ 
 @SuppressWarnings("serial")
 public class Field implements Serializable{
-	//A mezõ színe
+	/**
+	 * A mezõ színe
+	 */
 	private Color color;
-	//A jelenleg mezõn tartózkodó torony
+	/**
+	 * A jelenleg mezõn tartózkodó torony
+	 */
 	private Tower currTower;
-	//Sima lépés esetére tárolja a szomszédokat, irány-mezõ módon
+	/**
+	 * Sima lépés esetére tárolja a szomszédokat, irány-mezõ módon
+	 */
 	private HashMap<Direction, Field> frontNeighbours;
-	//A mezõ színével azonos színû tornyokat tárolja (alapesetben 2-t)
+	/**
+	 * A mezõ színével azonos színû tornyokat tárolja (alapesetben 2-t)
+	 */
 	private ArrayList<Tower> sameColorTowers;
-	//Melyik játékos bábuja nyer ha rálép
+	/**
+	 * Melyik játékos nyer ha rálép erre a mezõre? Defaultból null, a mezõk többségére rálépve nem nyer senki
+	 */
 	private DirType winningSide = null;
-	//Melyik játékban szerepel az adott emzõ objektum
+	/**
+	 * Melyik játékban szerepel az adott emzõ objektum
+	 */
 	private Game currGame;
-	Field(Game g){
+	public Field(Game g){
 		frontNeighbours = new HashMap<Direction, Field>();
 		sameColorTowers = new ArrayList<Tower>();
 		currGame = g;
@@ -32,10 +49,36 @@ public class Field implements Serializable{
 	 *		Tower típusú változó, amire be kell állítani az attribútum értékét
 	 */
 	public void setTower(Tower what) { currTower = what; }
+	/**
+	 * A mezõn aktuálisan álló tornyot adja vissza
+	 * @return
+	 * 		A mezõn álló torony objektum referenciája, ill. null ha a mezõ üres
+	 */
 	public Tower getCurrTower() { return currTower; }
+	/**
+	 * A mezõ tárolja a vele egyszínû tornyokat, ezzel új tornyot lehet a meglévõkhöz hozzáadni
+	 * @param what
+	 * 		Egy torony, aminek a színe megegyezik a mezõével
+	 */
 	public void setSameColorTower(Tower what) { sameColorTowers.add(what); }
+	/**
+	 * Beállítja a mezõ színét
+	 * @param c
+	 * 		Milyen színû legyen a mezõ
+	 */
 	public void setColor(Color c) { color = c; }
+	/**
+	 * Visszaadja a mezõ színét
+	 * @return
+	 * 		A mezõ színe
+	 */
 	public Color getColor() { return this.color; }
+	/**
+	 * Beállítja, hogy az adott mezõ melyik játékosnak "célmezeje", azaz, ha az adott játékos rálép egy
+	 * tornyával, megyneri a játékot.
+	 * @param who
+	 * 		Ki nyeri meg a játékot ha rálép erre a mezõre
+	 */
 	public void setWinningSide(DirType who) { winningSide = who; }
 	
 	/**
@@ -45,7 +88,7 @@ public class Field implements Serializable{
 	 * @return
 	 * 			Egy ArrayList amiben az adott irányba található összes szomszédja van
 	 */
-	protected ArrayList<Field> getNeighbour(Direction d) {
+	public ArrayList<Field> getNeighbour(Direction d) {
 		if(currTower != null) {
 			return null;
 		}
@@ -89,8 +132,7 @@ public class Field implements Serializable{
 	 * 			0	1	2
 	 * 			3	#	4
 	 * 			5	6	7
-	 * @param backNeighbours
-	 * 			Toláshoz használatos szomszédokat tárol a DirType szerinti sorrendben (most UP, DOWN)
+	 * 
 	 */
 	public void setNeighbours(LinkedList<Field> frontNeighbours) {
 		
