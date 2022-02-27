@@ -13,7 +13,7 @@ public class AI implements Serializable{
 	Game game;
 	//Azok a mezõk, amikre ha bábut léptet, nyer
 	ArrayList<Field> winningFields;
-	AI(Game game) { 
+	AI(Game game) {  
 		this.game = game;
 		winningFields = new ArrayList<Field>();
 	}
